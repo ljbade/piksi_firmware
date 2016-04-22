@@ -40,7 +40,7 @@ typedef struct {
                                /**< update_count value when pessimistic
                                     phase detector last "unlocked". */
   s32 TOW_ms;                  /**< TOW in ms. */
-  u32 sample_count;            /**< Total num samples channel has tracked for. */
+  u64 sample_count;            /**< Total num samples channel has tracked for. */
   u32 code_phase_early;        /**< Early code phase. */
   double code_phase_rate;      /**< Code phase rate in chips/s. */
   s64 carrier_phase;           /**< Carrier phase in NAP register units. */

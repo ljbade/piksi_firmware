@@ -423,7 +423,7 @@ static void solution_thread(void *arg)
        * receiver time and GPS time and hence provide the pseudorange
        * calculation with the local GPS time of reception. */
       calc_navigation_measurement(n_ready, p_meas, p_nav_meas,
-                                  (double)((u32)rec_tc) / SAMPLE_FREQ,
+                                  (double)(rec_tc) / SAMPLE_FREQ,
 								                  &rec_time, p_e_meas);
     } else {
       /* If a FINE quality time solution is not available then don't pass in a
@@ -431,7 +431,7 @@ static void solution_thread(void *arg)
        * and arbitrary receiver clock error. We may want to discard these
        * observations after doing a PVT solution. */
       calc_navigation_measurement(n_ready, p_meas, p_nav_meas,
-                                  (double)((u32)rec_tc) / SAMPLE_FREQ,
+                                  (double)(rec_tc) / SAMPLE_FREQ,
 								                  NULL, p_e_meas);
     }
     ephemeris_unlock();

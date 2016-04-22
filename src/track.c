@@ -132,7 +132,7 @@ static void interface_function(tracker_channel_t *tracker_channel,
                                tracker_interface_function_t func);
 static void event(tracker_channel_t *d, event_t event);
 static void common_data_init(tracker_common_data_t *common_data,
-                             u32 sample_count, float carrier_freq, float cn0);
+                             u64 sample_count, float carrier_freq, float cn0);
 static void tracker_channel_lock(tracker_channel_t *tracker_channel);
 static void tracker_channel_unlock(tracker_channel_t *tracker_channel);
 static void error_flags_clear(tracker_channel_t *tracker_channel);
@@ -225,7 +225,7 @@ void tracking_send_state()
  *
  * \return The propagated code phase in chips.
  */
-float propagate_code_phase(float code_phase, float carrier_freq, u32 n_samples)
+float propagate_code_phase(float code_phase, float carrier_freq, u64 n_samples)
 {
   /* Calculate the code phase rate with carrier aiding. */
   u32 code_phase_rate = (1.0 + carrier_freq/GPS_L1_HZ) *
@@ -326,7 +326,7 @@ bool tracker_channel_available(tracker_channel_id_t id, gnss_signal_t sid)
  * \return true if the tracker channel was initialized, false otherwise.
  */
 bool tracker_channel_init(tracker_channel_id_t id, gnss_signal_t sid,
-                          float carrier_freq,  u32 start_sample_count,
+                          float carrier_freq,  u64 start_sample_count,
                           float cn0_init, s8 elevation)
 {
   tracker_channel_t *tracker_channel = tracker_channel_get(id);
@@ -634,27 +634,17 @@ void tracking_channel_measurement_get(tracker_channel_id_t id,
 
   /* Adjust carrier phase initial integer offset to be approximately equal to
      pseudorange. */
-  /*if ((time_quality == TIME_FINE)
+  if ((time_quality == TIME_FINE)
       && (tracker_channel->carrier_phase_offset == 0.0)) {
-    u64 rec_tc = nap_timing_count();
-    /* Check for possible rollover * /
-    if ((rec_tc & 0x00000000FFFFFFFF) >= common_data->sample_count) {
-      gps_time_t tor = rx2gpstime((rec_tc & 0xFFFFFFFF00000000)
-                                  | common_data->sample_count);
+      gps_time_t tor = rx2gpstime(common_data->sample_count);
       gps_time_t tot;
       tot.tow = 1e-3 * meas->time_of_week_ms;
       tot.tow += meas->code_phase_chips / GPS_CA_CHIPPING_RATE;
       gps_time_match_weeks(&tot, &tor);
       tracker_channel->carrier_phase_offset = round(GPS_L1_HZ
                                                     * gpsdifftime(&tor, &tot));
-    } else {
-      char buf[SID_STR_LEN_MAX];
-      sid_to_string(buf, sizeof(buf), tracker_channel->info.sid);
-      log_debug("%s: Rollover while setting initial carrier phase offset.",
-                buf);
-    }
   }
-  meas->carrier_phase -= tracker_channel->carrier_phase_offset;*/
+  meas->carrier_phase -= tracker_channel->carrier_phase_offset;
 }
 
 /** Set the elevation angle for a tracker channel by sid.
@@ -1056,7 +1046,7 @@ static void event(tracker_channel_t *tracker_channel, event_t event)
  * \param cn0               C/N0 estimate.
  */
 static void common_data_init(tracker_common_data_t *common_data,
-                             u32 sample_count, float carrier_freq, float cn0)
+                             u64 sample_count, float carrier_freq, float cn0)
 {
   /* Initialize all fields to 0 */
   memset(common_data, 0, sizeof(tracker_common_data_t));

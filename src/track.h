@@ -37,7 +37,7 @@ void track_setup(void);
 
 void tracking_send_state(void);
 
-float propagate_code_phase(float code_phase, float carrier_freq, u32 n_samples);
+float propagate_code_phase(float code_phase, float carrier_freq, u64 n_samples);
 
 /* Update interface */
 void tracking_channels_update(u32 channels_mask);
@@ -47,7 +47,7 @@ void tracking_channels_missed_update_error(u32 channels_mask);
 /* State management interface */
 bool tracker_channel_available(tracker_channel_id_t id, gnss_signal_t sid);
 bool tracker_channel_init(tracker_channel_id_t id, gnss_signal_t sid,
-                          float carrier_freq,  u32 start_sample_count,
+                          float carrier_freq,  u64 start_sample_count,
                           float cn0_init, s8 elevation);
 bool tracker_channel_disable(tracker_channel_id_t id);
 

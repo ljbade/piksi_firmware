@@ -698,7 +698,7 @@ static void manage_tracking_startup(void)
     }
 
     /* Transition to tracking. */
-    u32 track_count = nap_timing_count() + 20000;
+    u64 track_count = nap_timing_count() + 20000;
     float cp = propagate_code_phase(startup_params.code_phase,
                                     startup_params.carrier_freq,
                                     track_count -

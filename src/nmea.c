@@ -393,22 +393,26 @@ void nmea_gpgll(const gnss_solution *soln, const gps_time_t *gps_t)
  *
  * Called from solution thread.
  *
- * \param soln     Pointer to gnss_solution struct.
- * \param n        Number of satellites in use
- * \param nav_meas Array of n navigation_measurement structs.
+ * \param soln          Pointer to gnss_solution struct.
+ * \param n             Number of satellites in use
+ * \param nav_meas      Array of n navigation_measurement structs.
+ * \param skip_velocity If TRUE then don't output any messages with velocity.
  */
 void nmea_send_msgs(gnss_solution *soln, u8 n,
-                    navigation_measurement_t *nm)
+                    navigation_measurement_t *nm,
+                    bool skip_velocity)
 {
   DO_EVERY(gpgsv_msg_rate,
     nmea_gpgsv(n, nm, soln);
   );
-  DO_EVERY(gprmc_msg_rate,
-    nmea_gprmc(soln, &soln->time);
-  );
-  DO_EVERY(gpvtg_msg_rate,
-    nmea_gpvtg(soln);
-  );
+  if (!skip_velocity) {
+    DO_EVERY(gprmc_msg_rate,
+      nmea_gprmc(soln, &soln->time);
+    );
+    DO_EVERY(gpvtg_msg_rate,
+      nmea_gpvtg(soln);
+    );
+  }
   DO_EVERY(gpgll_msg_rate,
     nmea_gpgll(soln, &soln->time);
   );

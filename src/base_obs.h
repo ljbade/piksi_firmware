@@ -48,7 +48,7 @@ typedef struct {
 /* Maximum distance between calculated and surveyed base station single point
  * position for error checking.
  */
-#define BASE_STATION_DISTANCE_THRESHOLD 5
+#define BASE_STATION_DISTANCE_THRESHOLD 50
 
 /* \} */
 

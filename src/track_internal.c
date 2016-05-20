@@ -33,14 +33,14 @@ static tracker_interface_list_element_t *tracker_interface_list = 0;
  * A map of signal to an initially random number that increments each time that
  * signal begins being tracked.
  */
-static u16 tracking_lock_counters[PLATFORM_SIGNAL_COUNT];
+//static u16 tracking_lock_counters[PLATFORM_SIGNAL_COUNT];
 
 /** Set up internal tracker data. */
 void track_internal_setup(void)
 {
-  for (u32 i=0; i < PLATFORM_SIGNAL_COUNT; i++) {
-    tracking_lock_counters[i] = rand();
-  }
+  //for (u32 i=0; i < PLATFORM_SIGNAL_COUNT; i++) {
+  //  tracking_lock_counters[i] = rand();
+  //}
 }
 
 /** Return a pointer to the tracker interface list. */
@@ -225,7 +225,7 @@ s8 nav_bit_quantize(s32 bit_integrate)
  */
 u16 tracking_lock_counter_increment(gnss_signal_t sid)
 {
-  return ++tracking_lock_counters[sid_to_global_index(sid)];
+  //return ++tracking_lock_counters[sid_to_global_index(sid)];
 }
 
 /** Return the tracking lock counter for the specified sid.
@@ -234,7 +234,7 @@ u16 tracking_lock_counter_increment(gnss_signal_t sid)
  */
 u16 tracking_lock_counter_get(gnss_signal_t sid)
 {
-  return tracking_lock_counters[sid_to_global_index(sid)];
+  //return tracking_lock_counters[sid_to_global_index(sid)];
 }
 
 /** \} */

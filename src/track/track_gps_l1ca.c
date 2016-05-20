@@ -140,6 +140,7 @@ static void tracker_gps_l1ca_init(const tracker_channel_info_t *channel_info,
 
   memset(data, 0, sizeof(gps_l1ca_tracker_data_t));
   tracker_ambiguity_unknown(channel_info->context);
+  common_data->lock_change_count = common_data->update_count;
 
   const struct loop_params *l = &loop_params_stage[0];
 
@@ -246,6 +247,7 @@ static void tracker_gps_l1ca_update(const tracker_channel_info_t *channel_info,
     /* SNR has dropped below threshold, indicate that the carrier phase
      * ambiguity is now unknown as cycle slips are likely. */
     tracker_ambiguity_unknown(channel_info->context);
+    common_data->lock_change_count = common_data->update_count;
     /* Update the latest time we were below the threshold. */
     common_data->cn0_below_use_thres_count = common_data->update_count;
   }
@@ -264,6 +266,7 @@ static void tracker_gps_l1ca_update(const tracker_channel_info_t *channel_info,
       log_info_sid(channel_info->sid, "PLL stress");
     }
     tracker_ambiguity_unknown(channel_info->context);
+    common_data->lock_change_count = common_data->update_count;
   }
 
   /* Run the loop filters. */
@@ -298,6 +301,7 @@ static void tracker_gps_l1ca_update(const tracker_channel_info_t *channel_info,
       }
 
       tracker_ambiguity_unknown(channel_info->context);
+      common_data->lock_change_count = common_data->update_count;
       /* Indicate that a mode change has occurred. */
       common_data->mode_change_count = common_data->update_count;
 

@@ -491,6 +491,19 @@ u32 tracking_channel_last_mode_change_ms_get(tracker_channel_id_t id)
                            &common_data->mode_change_count);
 }
 
+/** Return the time in ms since the last reset of the lock status for a tracker
+ * channel.
+ *
+ * \param id      ID of the tracker channel to use.
+ */
+u32 tracking_channel_last_lock_change_ms_get(tracker_channel_id_t id)
+{
+  const tracker_channel_t *tracker_channel = tracker_channel_get(id);
+  const tracker_common_data_t *common_data = &tracker_channel->common_data;
+  return update_count_diff(tracker_channel,
+                           &common_data->lock_change_count);
+}
+
 /** Return the sid currently associated with a tracker channel.
  *
  * \note The returned sid is only guaranteed to be valid if the tracker
@@ -577,7 +590,7 @@ void tracking_channel_measurement_get(tracker_channel_id_t id, u32 ref_tc,
   if (internal_data->bit_polarity == BIT_POLARITY_INVERTED) {
     meas->carrier_phase += 0.5;
   }
-  meas->lock_counter = internal_data->lock_counter;
+  //meas->lock_counter = internal_data->lock_counter;
 }
 
 /** Set the elevation angle for a tracker channel by sid.
